@@ -1,0 +1,66 @@
+//
+// core.h - Ядро. Подключает все модули ядра здесь.
+//
+// Является независимым пакетом полезных инструментов и функций, для любого приложения на си.
+//
+
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+// Подключаем:
+#include "std.h"
+#include "array.h"
+#include "files.h"
+#include "hashtable.h"
+#include "info.h"
+#include "jobsystem.h"
+#include "libs.h"
+#include "logger.h"
+#include "math.h"
+#include "mm.h"
+#include "node.h"
+#include "noise.h"
+#include "pixmap.h"
+#include "platform.h"
+#include "random.h"
+#include "time.h"
+
+
+// Инициализация ядра:
+static inline bool core_init(void) {
+    Info_get_cpu();  // Вызываем 1 раз чтобы кэшировать данные.
+    Time_init();     // Время инициализируем первым, потому что остальные модули могут использовать его.
+    Logger_init();
+    JobSystem_init();
+
+    // Инициализация генератора случайных чисел:
+    random_init((uint32_t)(Time_now(nullptr)));
+
+    // Настраиваем пути для OS X:
+    #ifdef __APPLE__
+        Files_fix_apple_path();
+    #endif
+    return true;
+}
+
+
+// Уничтожение ядра:
+static inline bool core_destroy(void) {
+    JobSystem_destroy();  // Уничтожение работы с задачами (потоками).
+    return true;
+}
+
+
+// Получить версию ядра:
+static inline const char* core_version(void) {
+    return "v1.0.0";
+}
+
+
+#ifdef __cplusplus
+}
+#endif

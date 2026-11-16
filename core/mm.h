@@ -1,0 +1,61 @@
+//
+// mm.h - Модуль менеджера памяти.
+//
+
+#pragma once
+
+
+// Подключаем:
+#include "std.h"
+
+
+// Получить размер заголовка блока в байтах:
+size_t mm_get_block_header_size(void);
+
+// Получить количество выделенных блоков:
+size_t mm_get_allocated_blocks(void);
+
+// Получить абсолютный размер используемой памяти в байтах с учётом заголовков блоков:
+size_t mm_get_absolute_used_size(void);
+
+// Получить сколько всего используется памяти в байтах этим менеджером памяти:
+size_t mm_get_used_size(void);
+
+// Получить сколько всего используется памяти в килобайтах этим менеджером памяти:
+double mm_get_used_size_kb(void);
+
+// Получить сколько всего используется памяти в мегабайтах этим менеджером памяти:
+double mm_get_used_size_mb(void);
+
+// Получить сколько всего используется памяти в гигабайтах этим менеджером памяти:
+double mm_get_used_size_gb(void);
+
+// Получить размер блока в байтах:
+size_t mm_get_block_size(void *ptr);
+
+// Добавить байты к использованной памяти (атомарно):
+void mm_used_size_add(size_t size);
+
+// Вычесть байты из использованной памяти (атомарно):
+void mm_used_size_sub(size_t size);
+
+// Выделение памяти с явным выравниванием:
+[[nodiscard]] void* mm_alloc_aligned(size_t size, size_t alignment);
+
+// Выделение памяти:
+[[nodiscard]] void* mm_alloc(size_t size);
+
+// Выделение памяти с обнулением:
+[[nodiscard]] void* mm_calloc(size_t count, size_t size);
+
+// Расширение блока памяти:
+[[nodiscard]] void* mm_realloc(void *ptr, size_t new_size);
+
+// Копирование строки:
+[[nodiscard]] char* mm_strdup(const char *str);
+
+// Освобождение памяти:
+void mm_free(void *ptr);
+
+// Вызовите если получите проблему при выделении памяти:
+[[noreturn]] void mm_alloc_error(void);

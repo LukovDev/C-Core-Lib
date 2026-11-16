@@ -1,0 +1,191 @@
+//
+// pixmap.c - Модуль для работы с растровыми картинками.
+//
+
+
+// Подключаем:
+#include "std.h"
+#include "mm.h"
+#include "logger.h"
+#include "libs.h"
+#include "pixmap.h"
+
+
+// Создать картинку:
+Pixmap* Pixmap_create(int width, int height, int channels) {
+    // Размер считаем в size_t и с проверкой переполнения:
+    size_t size;
+    if (width <= 0 || height <= 0 || channels <= 0 ||
+        ckd_mul(&size, (size_t)width, (size_t)height) ||
+        ckd_mul(&size, size, (size_t)channels))
+    {
+        log_msg("[E] Pixmap_create: invalid size %dx%dx%d.\n", width, height, channels);
+        mm_alloc_error();
+    }
+    Pixmap *pixmap = (Pixmap*)mm_alloc(sizeof(Pixmap));
+    pixmap->data = (unsigned char*)mm_alloc(size);
+    memset(pixmap->data, 0, size);
+    pixmap->width = width;
+    pixmap->height = height;
+    pixmap->channels = channels;
+    pixmap->from_stbi = false;
+    pixmap->is_hdr = false;
+    return pixmap;
+}
+
+
+// Уничтожить картинку:
+void Pixmap_destroy(Pixmap **pixmap) {
+    if (!pixmap || !*pixmap) return;
+    if ((*pixmap)->data != nullptr) {
+        if ((*pixmap)->from_stbi) {
+            stbi_image_free((*pixmap)->data);
+            mm_used_size_sub(Pixmap_get_size(*pixmap));
+        } else mm_free((*pixmap)->data);
+    }
+    mm_free(*pixmap);
+    *pixmap = nullptr;
+}
+
+
+// Загрузить картинку:
+Pixmap* Pixmap_load(const char *filepath, int channels) {
+    if (filepath == nullptr) return Pixmap_create_default();
+
+    Pixmap *pixmap = (Pixmap*)mm_alloc(sizeof(Pixmap));
+    if (channels <= 0) channels = (int)PIXMAP_RGBA;
+    pixmap->is_hdr = false;
+
+    // Загружаем как float (32 бита на канал), если это HDR картинка:
+    if (stbi_is_hdr(filepath)) {
+        if (channels >= (int)PIXMAP_RGBA) channels = (int)PIXMAP_RGB;  // Ограничиваем максимум 3 каналами.
+        pixmap->data = stbi_loadf(filepath, &pixmap->width, &pixmap->height, nullptr, channels);
+        pixmap->is_hdr = true;
+    } else {  // Загружаем как обычную картинку (8 бит на канал):
+        pixmap->data = stbi_load(filepath, &pixmap->width, &pixmap->height, nullptr, channels);
+    }
+
+    pixmap->channels = channels;
+    if (pixmap->data == nullptr) {
+        log_msg("[E] Pixmap_load: file \"%s\" not found/loaded.\n", filepath);
+        mm_free(pixmap);
+        return Pixmap_create_default();
+    }
+    pixmap->from_stbi = true;
+    mm_used_size_add(Pixmap_get_size(pixmap));
+    return pixmap;
+}
+
+
+// Сохранить картинку:
+bool Pixmap_save(Pixmap *self, const char *filepath, const char *format) {
+    if (!self || !self->data || !filepath || !format) return false;
+    bool success = false;
+
+    // Определяем формат по строке:
+    if (strcmp(format, "hdr") == 0) {
+        if (!self->is_hdr) {
+            log_msg("[E] Pixmap_save: Cannot save LDR pixmap as HDR without conversion.\n");
+            return false;
+        }
+        success = stbi_write_hdr(filepath, self->width, self->height, self->channels, (const float*)self->data);
+    } else if (strcmp(format, "png") == 0) {
+        if (self->is_hdr) {
+            log_msg("[E] Pixmap_save: Cannot save HDR pixmap as PNG directly.\n");
+            return false;
+        }
+        success = stbi_write_png(
+            filepath, self->width, self->height,
+            self->channels, self->data,
+            self->width * self->channels
+        );
+    } else if (strcmp(format, "jpg") == 0 || strcmp(format, "jpeg") == 0) {
+        if (self->is_hdr) return false;
+        success = stbi_write_jpg(filepath, self->width, self->height, self->channels, self->data, 100);
+    } else if (strcmp(format, "bmp") == 0) {
+        if (self->is_hdr) return false;
+        success = stbi_write_bmp(filepath, self->width, self->height, self->channels, self->data);
+    } else if (strcmp(format, "tga") == 0) {
+        if (self->is_hdr) return false;
+        success = stbi_write_tga(filepath, self->width, self->height, self->channels, self->data);
+    } else {
+        log_msg("[E] Pixmap_save: Unknown format: \"%s\"\n", format);
+        return false;
+    }
+
+    // Если не удалось сохранить картинку:
+    if (!success) {
+        log_msg("[E] Pixmap_save: Saving pixmap failed: \"%s\"\n", filepath);
+        return false;
+    }
+    return true;
+}
+
+
+// Копировать картинку в памяти:
+Pixmap* Pixmap_copy(const Pixmap *source) {
+    if (!source) return nullptr;
+    Pixmap *copy = (Pixmap*)mm_alloc(sizeof(Pixmap));
+
+    // Копируем простые поля:
+    copy->width = source->width;
+    copy->height = source->height;
+    copy->channels = source->channels;
+    copy->from_stbi = false;
+    copy->is_hdr = source->is_hdr;
+
+    // Вычисляем размер буфера:
+    size_t size = Pixmap_get_size((Pixmap*)source);
+
+    if (source->data && size > 0) {
+        copy->data = mm_alloc(size);
+        if (!copy->data) {
+            mm_free(copy);
+            mm_alloc_error();
+        }
+        memcpy(copy->data, source->data, size);
+    } else copy->data = nullptr;
+
+    return copy;
+}
+
+
+// Создать стандартную картинку:
+Pixmap* Pixmap_create_default(void) {
+    if (g_Pixmap_default_icon_size == 0) return nullptr;
+
+    Pixmap *pixmap = mm_alloc(sizeof(Pixmap));
+    if (!pixmap) mm_alloc_error();
+
+    unsigned char *buffer = mm_alloc(g_Pixmap_default_icon_size);
+    if (!buffer) mm_alloc_error();
+
+    // Копируем и используем стандартную картинку:
+    memcpy(buffer, g_Pixmap_default_icon, g_Pixmap_default_icon_size);
+    pixmap->data = buffer;
+    pixmap->width = g_Pixmap_default_icon_width;
+    pixmap->height = g_Pixmap_default_icon_height;
+    pixmap->channels = PIXMAP_RGBA;
+    pixmap->from_stbi = false;
+    pixmap->is_hdr = false;
+
+    return pixmap;
+}
+
+
+// Получить размер картинки в байтах:
+size_t Pixmap_get_size(Pixmap *self) {
+    if (!self) return 0;
+    size_t size = (size_t)self->width * (size_t)self->height * (size_t)self->channels;
+    return self->is_hdr ? (size * sizeof(float)) : (size * sizeof(unsigned char));
+}
+
+
+// Набор байтов стандартной картинки:
+alignas(16) const unsigned char g_Pixmap_default_icon[] = {
+    #embed "default_icon.bin"
+};
+
+const size_t g_Pixmap_default_icon_size = sizeof(g_Pixmap_default_icon);  // Размер картинки в байтах.
+const int g_Pixmap_default_icon_width  = 16;  // Ширина картинки.
+const int g_Pixmap_default_icon_height = 16;  // Высота картинки.
