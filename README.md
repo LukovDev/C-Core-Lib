@@ -10,6 +10,4 @@
 
 #
 
-**Документация на данный момент отсутствует. Тестов и примеров также нет. Планируется в будущем.**
-
-Доступные модули: `Array`, `Files`, `HashTable`, `Info`, `JobSystem`, `libs`, `Logger/log`, `math`, `mm`, `Node`, `Noise`, `Pixmap`, `PLATFORM`, `random`, `std`, `Time`.
+### Документация есть в `docs/README.md`

@@ -1,0 +1,95 @@
+# Math (`math.h`)
+
+Модуль математики и определения других типов данных.
+
+Подключает стандартную библиотеку математики `<math.h>` а также `cglm`.
+
+Полезные функции:
+- `double radians(double degrees)` - Перевести градусы в радианы.
+- `double degrees(double radians)` - Перевести радианы в градусы.
+- `double lerp(double a, double b, double t)` - Плавное смешивание.
+- `bool cmp_float(float a, float b)` - Сравнение двух вещественных чисел.
+- `bool cmp_double(double a, double b)` - Сравнение двух вещественных чисел двойной точности.
+- `float wrap_float(float v, float min, float max)` - Зациклить вещественное число.
+- `double normalize_deg(double a)` - Нормализовать угол.
+- `Vec4f mix_colors(Vec4f c1, Vec4f c2, float fraction, bool mix_alpha)` - Смешать цвета.
+
+Реализация простых базовых векторов:
+- Вектор двумерный целочисленный:
+  - `Vec2i { int x, y; }`
+  - `float Vec2i_len(Vec2i v)`
+  - `void Vec2i_sub(Vec2i *a, Vec2i b)`
+  - `void Vec2i_add(Vec2i *a, Vec2i b)`
+  - `void Vec2i_mul(Vec2i *a, Vec2i b)`
+  - `void Vec2i_div(Vec2i *a, Vec2i b)`
+  - `bool Vec2i_cmp(Vec2i a, Vec2i b)`
+- Вектор трехмерный целочисленный:
+  - `Vec3i { int x, y, z; }`
+  - `float Vec3i_len(Vec3i v)`
+  - `void Vec3i_sub(Vec3i *a, Vec3i b)`
+  - `void Vec3i_add(Vec3i *a, Vec3i b)`
+  - `void Vec3i_mul(Vec3i *a, Vec3i b)`
+  - `void Vec3i_div(Vec3i *a, Vec3i b)`
+  - `bool Vec3i_cmp(Vec3i a, Vec3i b)`
+- Вектор четырехмерный целочисленный:
+  - `Vec4i { int x, y, z, w; }`
+  - `float Vec4i_len(Vec4i v)`
+  - `void Vec4i_sub(Vec4i *a, Vec4i b)`
+  - `void Vec4i_add(Vec4i *a, Vec4i b)`
+  - `void Vec4i_mul(Vec4i *a, Vec4i b)`
+  - `void Vec4i_div(Vec4i *a, Vec4i b)`
+  - `bool Vec4i_cmp(Vec4i a, Vec4i b)`
+- Вектор двумерный вещественный:
+  - `Vec2f { float x, y; }`
+  - `float Vec2f_len(Vec2f v)`
+  - `void Vec2f_sub(Vec2f *a, Vec2f b)`
+  - `void Vec2f_add(Vec2f *a, Vec2f b)`
+  - `void Vec2f_mul(Vec2f *a, Vec2f b)`
+  - `void Vec2f_div(Vec2f *a, Vec2f b)`
+  - `bool Vec2f_cmp(Vec2f a, Vec2f b)`
+  - `Vec2f Vec2f_norm(Vec2f a)`
+- Вектор трехмерный вещественный:
+  - `Vec3f { float x, y, z; }`
+  - `float Vec3f_len(Vec3f v)`
+  - `void Vec3f_sub(Vec3f *a, Vec3f b)`
+  - `void Vec3f_add(Vec3f *a, Vec3f b)`
+  - `void Vec3f_mul(Vec3f *a, Vec3f b)`
+  - `void Vec3f_div(Vec3f *a, Vec3f b)`
+  - `bool Vec3f_cmp(Vec3f a, Vec3f b)`
+  - `Vec3f Vec3f_norm(Vec3f a)`
+- Вектор четырехмерный вещественный:
+  - `Vec4f { float x, y, z, w; }`
+  - `float Vec4f_len(Vec4f v)`
+  - `Vec4f_sub(Vec4f *a, Vec4f b)`
+  - `Vec4f_add(Vec4f *a, Vec4f b)`
+  - `Vec4f_mul(Vec4f *a, Vec4f b)`
+  - `Vec4f_div(Vec4f *a, Vec4f b)`
+  - `bool Vec4f_cmp(Vec4f a, Vec4f b)`
+  - `Vec4f Vec4f_norm(Vec4f a)`
+- Вектор двумерный вещественный с двойной точностью:
+  - `Vec2d { double x, y; }`
+  - `double Vec2d_len(Vec2d v)`
+  - `void Vec2d_sub(Vec2d *a, Vec2d b)`
+  - `void Vec2d_add(Vec2d *a, Vec2d b)`
+  - `void Vec2d_mul(Vec2d *a, Vec2d b)`
+  - `void Vec2d_div(Vec2d *a, Vec2d b)`
+  - `bool Vec2d_cmp(Vec2d a, Vec2d b)`
+  - `Vec2d Vec2d_norm(Vec2d a)`
+- Вектор трехмерный вещественный с двойной точностью:
+  - `Vec3d { double x, y, z; }`
+  - `double Vec3d_len(Vec3d v)`
+  - `void Vec3d_sub(Vec3d *a, Vec3d b)`
+  - `void Vec3d_add(Vec3d *a, Vec3d b)`
+  - `void Vec3d_mul(Vec3d *a, Vec3d b)`
+  - `void Vec3d_div(Vec3d *a, Vec3d b)`
+  - `bool Vec3d_cmp(Vec3d a, Vec3d b)`
+  - `Vec3d Vec3d_norm(Vec3d a)`
+- Вектор четырехмерный вещественный с двойной точностью:
+  - `Vec4d { double x, y, z, w; }`
+  - `double Vec4d_len(Vec4d v)`
+  - `void Vec4d_sub(Vec4d *a, Vec4d b)`
+  - `void Vec4d_add(Vec4d *a, Vec4d b)`
+  - `void Vec4d_mul(Vec4d *a, Vec4d b)`
+  - `void Vec4d_div(Vec4d *a, Vec4d b)`
+  - `bool Vec4d_cmp(Vec4d a, Vec4d b)`
+  - `Vec4d Vec4d_norm(Vec4d a)`

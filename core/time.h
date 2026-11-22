@@ -98,7 +98,7 @@ static inline void Time_delay(double seconds) {
 }
 
 
-// Узнать у устройства смещение часового времени:
+// Узнать у устройства смещение часового пояса:
 static inline TimeOffsetUTC Time_get_utc_offset(void) {
     // Вычисляем:
     time_t now = time(nullptr);

@@ -23,9 +23,9 @@
 #include "info.h"
 
 
-// Глобальные переменные:
-bool g_Info_cpu_cached_ = false;
-CpuInfo g_Info_cpu_info_cache_ = {};
+// Переменные кэша:
+static bool cpu_cached = false;
+static CpuInfo cpu_info_cache = {};
 
 
 // Получить архитектуру процессора в виде строки:
@@ -42,7 +42,7 @@ const char* Info_get_cpu_arch_name(Info_cpu_arch arch) {
 
 // Функция для получения информации о процессоре:
 CpuInfo Info_get_cpu(void) {
-    if (g_Info_cpu_cached_) return g_Info_cpu_info_cache_;  // Используем кэш.
+    if (cpu_cached) return cpu_info_cache;  // Используем кэш.
 
     CpuInfo info = {.threads = 1, .arch = INFO_UNKNOWN};
     memset(info.model, 0, sizeof(info.model));  // Обнуляем строку модели процессора.
@@ -135,9 +135,9 @@ CpuInfo Info_get_cpu(void) {
     if (info.threads < 1) info.threads = 1;  // Защита от некорректных значений.
 
     // Кэширование результата:
-    if (!g_Info_cpu_cached_) {
-        g_Info_cpu_info_cache_ = info;
-        g_Info_cpu_cached_ = true;
+    if (!cpu_cached) {
+        cpu_info_cache = info;
+        cpu_cached = true;
     }
     return info;
 }

@@ -40,11 +40,6 @@ struct MemInfo {
 };
 
 
-// Глобальные переменные:
-extern bool g_Info_cpu_cached_;
-extern CpuInfo g_Info_cpu_info_cache_;
-
-
 // Получить архитектуру процессора в виде строки:
 const char* Info_get_cpu_arch_name(Info_cpu_arch arch);
 

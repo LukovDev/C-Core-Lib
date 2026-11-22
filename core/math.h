@@ -92,13 +92,13 @@ static inline void Vec2f_div(Vec2f *a, Vec2f b) {
     if(b.x == 0.0f || b.y == 0.0f) return;
     a->x /= b.x; a->y /= b.y;
 }
+static inline bool Vec2f_cmp(Vec2f a, Vec2f b) {
+    return cmp_float(a.x, b.x) && cmp_float(a.y, b.y);
+}
 static inline Vec2f Vec2f_norm(Vec2f a) {
     float l = Vec2f_len(a);
     if (l == 0.0f) return (Vec2f){0.0f, 0.0f};
     return (Vec2f){a.x / l, a.y / l};
-}
-static inline bool Vec2f_cmp(Vec2f a, Vec2f b) {
-    return cmp_float(a.x, b.x) && cmp_float(a.y, b.y);
 }
 
 // Вектор трехмерный вещественный:
@@ -111,13 +111,13 @@ static inline void Vec3f_div(Vec3f *a, Vec3f b) {
     if(b.x == 0.0f || b.y == 0.0f || b.z == 0.0f) return;
     a->x /= b.x; a->y /= b.y; a->z /= b.z;
 }
+static inline bool Vec3f_cmp(Vec3f a, Vec3f b) {
+    return cmp_float(a.x, b.x) && cmp_float(a.y, b.y) && cmp_float(a.z, b.z);
+}
 static inline Vec3f Vec3f_norm(Vec3f a) {
     float l = Vec3f_len(a);
     if (l == 0.0f) return (Vec3f){0.0f, 0.0f, 0.0f};
     return (Vec3f){a.x / l, a.y / l, a.z / l};
-}
-static inline bool Vec3f_cmp(Vec3f a, Vec3f b) {
-    return cmp_float(a.x, b.x) && cmp_float(a.y, b.y) && cmp_float(a.z, b.z);
 }
 
 // Вектор четырехмерный вещественный:
@@ -130,13 +130,13 @@ static inline void Vec4f_div(Vec4f *a, Vec4f b) {
     if(b.x == 0.0f || b.y == 0.0f || b.z == 0.0f || b.w == 0.0f) return;
     a->x /= b.x; a->y /= b.y; a->z /= b.z; a->w /= b.w;
 }
+static inline bool Vec4f_cmp(Vec4f a, Vec4f b) {
+    return cmp_float(a.x, b.x) && cmp_float(a.y, b.y) && cmp_float(a.z, b.z) && cmp_float(a.w, b.w);
+}
 static inline Vec4f Vec4f_norm(Vec4f a) {
     float l = Vec4f_len(a);
     if (l == 0.0f) return (Vec4f){0.0f, 0.0f, 0.0f, 0.0f};
     return (Vec4f){a.x / l, a.y / l, a.z / l, a.w / l};
-}
-static inline bool Vec4f_cmp(Vec4f a, Vec4f b) {
-    return cmp_float(a.x, b.x) && cmp_float(a.y, b.y) && cmp_float(a.z, b.z) && cmp_float(a.w, b.w);
 }
 
 // Вектор двумерный вещественный с двойной точностью:
@@ -149,13 +149,13 @@ static inline void Vec2d_div(Vec2d *a, Vec2d b) {
     if(b.x == 0.0 || b.y == 0.0) return;
     a->x /= b.x; a->y /= b.y;
 }
+static inline bool Vec2d_cmp(Vec2d a, Vec2d b) {
+    return cmp_double(a.x, b.x) && cmp_double(a.y, b.y);
+}
 static inline Vec2d Vec2d_norm(Vec2d a) {
     double l = Vec2d_len(a);
     if (l == 0.0) return (Vec2d){0.0, 0.0};
     return (Vec2d){a.x / l, a.y / l};
-}
-static inline bool Vec2d_cmp(Vec2d a, Vec2d b) {
-    return cmp_double(a.x, b.x) && cmp_double(a.y, b.y);
 }
 
 // Вектор трехмерный вещественный с двойной точностью:
@@ -168,13 +168,13 @@ static inline void Vec3d_div(Vec3d *a, Vec3d b) {
     if(b.x == 0.0 || b.y == 0.0 || b.z == 0.0) return;
     a->x /= b.x; a->y /= b.y; a->z /= b.z;
 }
+static inline bool Vec3d_cmp(Vec3d a, Vec3d b) {
+    return cmp_double(a.x, b.x) && cmp_double(a.y, b.y) && cmp_double(a.z, b.z);
+}
 static inline Vec3d Vec3d_norm(Vec3d a) {
     double l = Vec3d_len(a);
     if (l == 0.0) return (Vec3d){0.0, 0.0, 0.0};
     return (Vec3d){a.x / l, a.y / l, a.z / l};
-}
-static inline bool Vec3d_cmp(Vec3d a, Vec3d b) {
-    return cmp_double(a.x, b.x) && cmp_double(a.y, b.y) && cmp_double(a.z, b.z);
 }
 
 // Вектор четырехмерный вещественный с двойной точностью:
@@ -187,13 +187,13 @@ static inline void Vec4d_div(Vec4d *a, Vec4d b) {
     if(b.x == 0.0 || b.y == 0.0 || b.z == 0.0 || b.w == 0.0) return;
     a->x /= b.x; a->y /= b.y; a->z /= b.z; a->w /= b.w;
 }
+static inline bool Vec4d_cmp(Vec4d a, Vec4d b) {
+    return cmp_double(a.x, b.x) && cmp_double(a.y, b.y) && cmp_double(a.z, b.z) && cmp_double(a.w, b.w);
+}
 static inline Vec4d Vec4d_norm(Vec4d a) {
     double l = Vec4d_len(a);
     if (l == 0.0) return (Vec4d){0.0, 0.0, 0.0, 0.0};
     return (Vec4d){a.x / l, a.y / l, a.z / l, a.w / l};
-}
-static inline bool Vec4d_cmp(Vec4d a, Vec4d b) {
-    return cmp_double(a.x, b.x) && cmp_double(a.y, b.y) && cmp_double(a.z, b.z) && cmp_double(a.w, b.w);
 }
 
 
