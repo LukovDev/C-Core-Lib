@@ -10,6 +10,7 @@
 extern "C" {
 #endif
 
+
 // Подключаем:
 #include "std.h"
 #include "array.h"
@@ -36,6 +37,7 @@ bool core_destroy(void);
 
 // Получить версию ядра:
 const char* core_version(void);
+
 
 #ifdef __cplusplus
 }

@@ -8,9 +8,12 @@
 #include "core.h"
 
 
+// Локальные переменные:
+static bool init = false;
+
+
 // Инициализация ядра:
 bool core_init(void) {
-    static bool init = false;
     if (init) return false;
     init = true;
     Info_get_cpu();  // Вызываем 1 раз чтобы кэшировать данные.
@@ -28,13 +31,16 @@ bool core_init(void) {
     return true;
 }
 
+
 // Уничтожение ядра:
 bool core_destroy(void) {
+    if (!init) return false;
     JobSystem_destroy();  // Уничтожение работы с задачами (потоками).
     return true;
 }
 
+
 // Получить версию ядра:
 const char* core_version(void) {
-    return "v1.0.0";
+    return "v1.0.1";
 }

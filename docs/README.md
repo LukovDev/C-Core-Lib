@@ -1,4 +1,4 @@
-# Руководство по C-Core-Lib (v1.0.0)
+# Руководство по C-Core-Lib (v1.0.1)
 
 ### Описание:
 
@@ -11,7 +11,7 @@
 ### Список модулей ядра:
 
 - [`Array`](array.md) (`array.c`, `array.h`).
-- [`core`](core.md) (`core.h`).
+- [`core`](core.md) (`core.h`, `core.c`).
 - [`Files`](files.md) (`files.c`, `files.h`).
 - [`HashTable`](hashtable.md) (`hashtable.c`, `hashtable.h`).
 - [`Info`](info.md) (`info.c`, `info.h`).
