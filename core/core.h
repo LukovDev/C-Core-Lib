@@ -10,7 +10,6 @@
 extern "C" {
 #endif
 
-
 // Подключаем:
 #include "std.h"
 #include "array.h"
@@ -29,37 +28,14 @@ extern "C" {
 #include "random.h"
 #include "time.h"
 
-
 // Инициализация ядра:
-static inline bool core_init(void) {
-    Info_get_cpu();  // Вызываем 1 раз чтобы кэшировать данные.
-    Time_init();     // Время инициализируем первым, потому что остальные модули могут использовать его.
-    Logger_init();
-    JobSystem_init();
-
-    // Инициализация генератора случайных чисел:
-    random_init((uint32_t)(Time_now(nullptr)));
-
-    // Настраиваем пути для OS X:
-    #ifdef __APPLE__
-        Files_fix_apple_path();
-    #endif
-    return true;
-}
-
+bool core_init(void);
 
 // Уничтожение ядра:
-static inline bool core_destroy(void) {
-    JobSystem_destroy();  // Уничтожение работы с задачами (потоками).
-    return true;
-}
-
+bool core_destroy(void);
 
 // Получить версию ядра:
-static inline const char* core_version(void) {
-    return "v1.0.0";
-}
-
+const char* core_version(void);
 
 #ifdef __cplusplus
 }
